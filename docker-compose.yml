@@ -1,0 +1,9 @@
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: lab-app
+    ports:
+      - "80:8080"

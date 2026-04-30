@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'Lazonby-Liquid';
+  src: url('@/assets/fonts/LazenbyCompLiquid.ttf') format('truetype');
+  /* Add woff/woff2 formats here if available */
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Lazonby-Liquid';
+  src: url('@/assets/fonts/LazenbyCompSmooth.ttf') format('truetype');
+  /* Add woff/woff2 formats here if available */
+  font-weight: normal;
+  font-style: normal;
+}

@@ -9,6 +9,7 @@
     <v-toolbar-title class="applicationName">
       Management Hub
     </v-toolbar-title>
+    <NavigationView />
     <ProfileView />
   </v-app-bar>
 </template>
@@ -17,6 +18,7 @@
 import '@/assets/main.css'
 import ProfileView from '@/views/PreferencesView.vue'
 import logo from '@/assets/logo.svg'
+import NavigationView from './NavigationView.vue';
 </script>
 
 <style>

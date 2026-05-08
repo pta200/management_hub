@@ -2,13 +2,15 @@
 import { onMounted} from 'vue'
 import { useUserStore } from '@/stores/users.js'
 import { useuiStateStore } from '@/stores/uiState.js'
+import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 const uiStateStore = useuiStateStore()
+const router = useRouter()
 
 async function doLogout() {
-      this.userStore.logout()
-      this.$router.push('/login')
+      await userStore.logout()
+      await router.replace('/login')
 }
 
 function toggleLable() {
@@ -27,7 +29,7 @@ onMounted(() => {
       <v-btn v-bind="props" icon="mdi-account-circle"></v-btn>
     </template>
     <v-list density="comfortable" nav class="popout">
-      <v-list-item @click="this.doLogout()" prepend-icon="mdi-logout" title="Logout"> </v-list-item>
+      <v-list-item @click="doLogout()" prepend-icon="mdi-logout" title="Logout"> </v-list-item>
       <!-- Setting group -->
       <v-list-group>
         <template v-slot:activator="{ props }">

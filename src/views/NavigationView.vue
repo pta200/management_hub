@@ -1,22 +1,29 @@
 <script setup>
-import { useUserStore } from '../stores/users.js'
+import { useUserStore } from '@/stores/users.js'
 import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 const router = useRouter()
-const links = router.getRoutes().filter(route => !route.path.includes(':'))
+// const links = router.getRoutes().filter(route => !route.path.includes(':'))
+const links = router.getRoutes().filter(route => route.name != 'login' && !route.path.includes(':'))
 
 </script>
 
 <template>
-  <v-system-bar window v-if="userStore.authToken" class="linkOutter bg-linkBg border-linkBorder">
-      <div v-for="nav in links" :key="nav.title" class="linkClass">
-        <router-link class="link text-linkText" v-if="nav.name != 'login'" :to="nav.path">{{
-          nav.name
-        }}</router-link>
-      </div>
-    <v-spacer></v-spacer>
-  </v-system-bar>
+  <v-menu v-if="userStore.authToken" >
+    <template v-slot:activator="{ props }">
+      <v-btn icon="mdi mdi-menu" variant="text" v-bind="props"></v-btn>
+    </template>
+
+    <v-list density="compact">
+      <v-list-item
+        v-for="nav in links"
+        :key="nav.title"
+      >
+        <router-link class="link text-linkText" v-if="nav.name != 'login'" :to="nav.path">{{nav.name}}</router-link>
+      </v-list-item>
+    </v-list>
+  </v-menu>
 </template>
 
 <style scoped>

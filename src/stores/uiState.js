@@ -10,7 +10,7 @@ export const useuiStateStore = defineStore('uiStateStore', {
     themestate: localStorage.getItem('theme') || 'system',
     currentTheme: '',
     navTheme: true,
-    theme: useTheme()
+    theme: useTheme(),
   }),
   actions: {
     snackbarState() {
@@ -21,7 +21,7 @@ export const useuiStateStore = defineStore('uiStateStore', {
       this.toggle = !this.toggle
     },
     toggleTheme() {
-      console.log("TOGLLGING")
+      console.log('TOGLLGING')
       if (this.themestate === 'dark_theme') {
         localStorage.setItem('theme', 'dark_theme')
         this.navTheme = false
@@ -34,7 +34,7 @@ export const useuiStateStore = defineStore('uiStateStore', {
         this.themestate = 'light_theme'
       }
       this.currentTheme = localStorage.theme.split('T')[0]
-      console.log(this.currentTheme )
+      console.log(this.currentTheme)
     },
     checkTheme() {
       if (localStorage.getItem('theme')) {

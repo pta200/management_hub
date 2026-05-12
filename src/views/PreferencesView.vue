@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted} from 'vue'
+import { onMounted } from 'vue'
 import { useUserStore } from '@/stores/users.js'
 import { useuiStateStore } from '@/stores/uiState.js'
 import { useRouter } from 'vue-router'
@@ -9,18 +9,17 @@ const uiStateStore = useuiStateStore()
 const router = useRouter()
 
 async function doLogout() {
-      await userStore.logout()
-      await router.replace('/login')
+  await userStore.logout()
+  await router.replace('/login')
 }
 
 function toggleLable() {
-      return "Theme: " + uiStateStore.currentTheme.split("_")[0];
-    }
+  return 'Theme: ' + uiStateStore.currentTheme.split('_')[0]
+}
 
 onMounted(() => {
   uiStateStore.checkTheme()
 })
-
 </script>
 
 <template>

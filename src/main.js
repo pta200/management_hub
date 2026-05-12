@@ -1,4 +1,3 @@
-
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { loadFonts } from './plugins/webfontloader'

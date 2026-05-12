@@ -1,5 +1,5 @@
 <template>
-  <v-app  class="bg-appBg">
+  <v-app class="bg-appBg">
     <TitleView />
     <v-main>
       <router-view />

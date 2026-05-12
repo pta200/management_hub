@@ -11,7 +11,6 @@ export default createVuetify({
   components,
   directives,
   theme: {
-    
     themes: {
       light_theme: {
         dark: false,

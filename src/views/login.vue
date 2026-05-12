@@ -113,7 +113,7 @@ export default {
             label="Password"
             hint="At least 8 characters"
             counter
-            @click:prepend-inner-icon="passwordShow = !passwordShow"
+            @click:prepend-inner="passwordShow = !passwordShow"
             @focus="clearStatus"
             @keydown.enter="validate"
           ></v-text-field>

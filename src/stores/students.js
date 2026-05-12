@@ -13,29 +13,31 @@ export const useStudentStore = defineStore('students', () => {
 
   async function getStudents(offset = 0, limit = 100) {
     loading.value = true
-    if (items.value.length == 0) {
-      try {
-        const response = await axios.get(API_URL + `/students?offset=${offset}&limit=${limit}`, {
+    try {
+      const response = await axios.get(
+        API_URL + `/students/paginate?offset=${offset}&limit=${limit}`,
+        {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${userStore.authToken}`,
           },
-        })
-        console.log(response.data)
+        },
+      )
+      console.log(response.data)
 
-        items.value = response.data.students
-        total.value = response.data.students.length
-        return response
-      } catch (error) {
-        items.value = []
-        console.error('Error during request:', error)
-        if (axios.isAxiosError(error) && error?.response) {
-          return error.response
-        }
-        return error.message
+      items.value = response.data?.items
+      total.value = response.data?.total_items ?? 0
+      return response
+    } catch (error) {
+      items.value = []
+      console.error('Error during request:', error)
+      if (axios.isAxiosError(error) && error?.response) {
+        return error.response
       }
+      return error.message
+    } finally {
+      loading.value = false
     }
-    loading.value = false
   }
 
   async function addStudent(payload) {
@@ -100,5 +102,35 @@ export const useStudentStore = defineStore('students', () => {
     }
   }
 
-  return { items, total, getStudents, addStudent, editStudent, deleteStudent }
+  async function searchStudents(payload, offset = 0, limit = 100) {
+    try {
+      const queryString = new URLSearchParams(payload).toString()
+      console.log(`/students/search?filter=${queryString}&offset=${offset}&limit=${limit}`)
+      const response = await axios.get(
+        API_URL + `/students/search?${queryString}&offset=${offset}&limit=${limit}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userStore.authToken}`,
+          },
+        },
+      )
+      console.log(response.data)
+
+      items.value = response.data?.items
+      total.value = response.data?.total_items ?? 0
+      return response
+    } catch (error) {
+      items.value = []
+      console.error('Error during request:', error)
+      if (axios.isAxiosError(error) && error?.response) {
+        return error.response
+      }
+      return error.message
+    } finally {
+      loading.value = false
+    }
+  }
+
+  return { items, total, getStudents, addStudent, editStudent, deleteStudent, searchStudents }
 })

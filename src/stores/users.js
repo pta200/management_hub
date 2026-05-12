@@ -35,7 +35,6 @@ export const useUserStore = defineStore('UserStore', {
     },
     async login(payload) {
       try {
-
         const formData = new FormData()
         formData.append('username', payload.username)
         formData.append('password', payload.password)

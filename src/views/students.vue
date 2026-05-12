@@ -135,7 +135,6 @@
                 min="0"
               ></v-text-field>
             </v-col>
-
           </v-row>
         </v-form>
       </template>
@@ -191,7 +190,7 @@ const headers = [
   { title: 'Email', key: 'email' },
   { title: 'Mobile', key: 'mobile' },
   { title: 'Course', key: 'course' },
-  { title: 'GPA', key: 'gpa'},
+  { title: 'GPA', key: 'gpa' },
   { title: 'Actions', key: 'actions', align: 'end', sortable: false },
 ]
 
@@ -201,18 +200,17 @@ onMounted(() => {
 
 const requiredRule = (value) => !!value || 'Field is required.'
 const emailRules = [
-  v => !!v || 'E-mail is required',
-  v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+  (v) => !!v || 'E-mail is required',
+  (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
 ]
 const form = ref(null)
 
 function isE164(phone) {
-    const e164Regex = /^\+[1-9]\d{6,14}$/;
-    return e164Regex.test(phone);
+  const e164Regex = /^\+[1-9]\d{6,14}$/
+  return e164Regex.test(phone)
 }
 
 const mobileRule = (value) => isE164(value) || 'Invalid mobile format'
-
 
 function add() {
   formModel.value = createNewRecord()

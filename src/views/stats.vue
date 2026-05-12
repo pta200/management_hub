@@ -71,7 +71,12 @@
           patternUnits="userSpaceOnUse"
           width="20"
         >
-          <path d="M0 10h20zm0 20h20zm0 20h20zm0 20h20z" fill="none" stroke="rgb(var(--v-theme-surface))" stroke-width="3" />
+          <path
+            d="M0 10h20zm0 20h20zm0 20h20zm0 20h20z"
+            fill="none"
+            stroke="rgb(var(--v-theme-surface))"
+            stroke-width="3"
+          />
         </pattern>
       </defs>
     </svg>
@@ -84,24 +89,31 @@
 }
 </route>
 
-
 <script setup>
-  import { shallowRef, toRef } from 'vue'
-  import { VPie } from 'vuetify/labs/VPie' // Example path
+import { shallowRef, toRef } from 'vue'
+import { VPie } from 'vuetify/labs/VPie' // Example path
 
-  const selectedGroup = shallowRef('Transactions')
-  const currentItems = toRef(() => selectedGroup.value === 'Transactions'
+const selectedGroup = shallowRef('Transactions')
+const currentItems = toRef(() =>
+  selectedGroup.value === 'Transactions'
     ? [
-      { id: 1, title: 'House & Bills', value: 40, color: 'rgba(var(--v-theme-on-surface), .2)', pattern: 'url(#pattern-0)' },
-      { id: 2, title: 'Transportation', value: 25, color: 'rgba(255, 151, 215, .4)' },
-      { id: 3, title: 'Entertainment', value: 20, color: 'rgba(255, 151, 215, .6)' },
-      { id: 4, title: 'Food', value: 10, color: 'rgba(255, 151, 215, .8)' },
-      { id: 5, title: 'Other', value: 5, color: 'rgba(255, 151, 215, 1)' },
-    ]
+        {
+          id: 1,
+          title: 'House & Bills',
+          value: 40,
+          color: 'rgba(var(--v-theme-on-surface), .2)',
+          pattern: 'url(#pattern-0)',
+        },
+        { id: 2, title: 'Transportation', value: 25, color: 'rgba(255, 151, 215, .4)' },
+        { id: 3, title: 'Entertainment', value: 20, color: 'rgba(255, 151, 215, .6)' },
+        { id: 4, title: 'Food', value: 10, color: 'rgba(255, 151, 215, .8)' },
+        { id: 5, title: 'Other', value: 5, color: 'rgba(255, 151, 215, 1)' },
+      ]
     : [
-      { id: 1, title: 'OSS Donations', value: 37, color: '#767119' },
-      { id: 2, title: 'Travel', value: 22, color: '#9e850d' },
-      { id: 3, title: 'Investment', value: 20, color: '#cb9700' },
-      { id: 4, title: 'Books', value: 11, color: '#ffa600' },
-    ])
+        { id: 1, title: 'OSS Donations', value: 37, color: '#767119' },
+        { id: 2, title: 'Travel', value: 22, color: '#9e850d' },
+        { id: 3, title: 'Investment', value: 20, color: '#cb9700' },
+        { id: 4, title: 'Books', value: 11, color: '#ffa600' },
+      ],
+)
 </script>

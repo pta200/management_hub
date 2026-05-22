@@ -44,6 +44,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    'Notifications': RouteRecordInfo<
+      'Notifications',
+      '/notifications',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     'Stats': RouteRecordInfo<
       'Stats',
       '/stats',
@@ -54,13 +61,6 @@ declare module 'vue-router/auto-routes' {
     'Students': RouteRecordInfo<
       'Students',
       '/students',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    'Students Server Table': RouteRecordInfo<
-      'Students Server Table',
-      '/students-data-table',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -90,6 +90,12 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'src/views/notifications.vue': {
+      routes:
+        | 'Notifications'
+      views:
+        | never
+    }
     'src/views/stats.vue': {
       routes:
         | 'Stats'
@@ -99,12 +105,6 @@ declare module 'vue-router/auto-routes' {
     'src/views/students.vue': {
       routes:
         | 'Students'
-      views:
-        | never
-    }
-    'src/views/students-data-table.vue': {
-      routes:
-        | 'Students Server Table'
       views:
         | never
     }

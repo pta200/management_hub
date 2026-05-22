@@ -5,13 +5,18 @@
         {{ errorMessage }}
       </v-alert>
     </v-card-text>
-    <v-data-table
-      :headers="headers"
-      :items="studentStore.items"
-      :loading="studentStore.loading"
-      no-data-text="No students on record"
-      :search="search"
-    >
+      <v-data-table-server
+        v-model:items-per-page="itemsPerPage"
+        :headers="headers"
+        :items="studentStore.items"
+        :items-per-page-options="[5, 10, 25, 100]"
+        :loading="studentStore.loading"
+        :items-length="studentStore.total"
+        :search="debouncedSearch"
+        item-value="student_id"
+        @update:options="loadItems"
+        no-data-text="No students on record"
+      >
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>
@@ -20,8 +25,8 @@
           </v-toolbar-title>
 
           <v-text-field
-            v-model="search"
-            label="Search"
+            v-model="searchField"
+            label="Search Items..."
             prepend-inner-icon="mdi-magnify"
             variant="outlined"
             hide-details
@@ -59,17 +64,7 @@
         </div>
       </template>
 
-      <template v-slot:no-data>
-        <v-btn
-          prepend-icon="mdi-backup-restore"
-          rounded="lg"
-          text="Reset data"
-          variant="text"
-          border
-          @click="reset"
-        ></v-btn>
-      </template>
-    </v-data-table>
+    </v-data-table-server>
   </v-sheet>
 
   <v-dialog v-model="dialog" max-width="600">
@@ -159,11 +154,38 @@
 </route>
 
 <script setup>
-import { onMounted, ref, shallowRef, toRef } from 'vue'
+import { watch, ref, shallowRef, toRef } from 'vue'
 import { useStudentStore } from '@/stores/students'
 import { useRouter } from 'vue-router'
+import debounce from 'lodash.debounce'
 
 const router = useRouter()
+const formModel = ref(createNewRecord())
+const dialog = shallowRef(false)
+const isEditing = toRef(() => !!formModel.value.student_id)
+const apiError = ref(false)
+const deleteError = ref(false)
+const errorMessage = ref('')
+const studentStore = useStudentStore()
+const itemsPerPage = ref(5)
+const searchField = ref('')
+const debouncedSearch = ref('')
+const headers = [
+  { title: 'Name', key: 'name', align: 'start'  },
+  { title: 'Email', key: 'email' },
+  { title: 'Mobile', key: 'mobile' },
+  { title: 'Course', key: 'course' },
+  { title: 'GPA', key: 'gpa' },
+  { title: 'Actions', key: 'actions', align: 'end', sortable: false },
+]
+
+const updateSearch = debounce((val) => {
+  debouncedSearch.value = val
+}, 500)
+
+watch(searchField, (newVal) => {
+  updateSearch(newVal)
+})
 
 function createNewRecord() {
   return {
@@ -175,28 +197,18 @@ function createNewRecord() {
   }
 }
 
-const studentStore = useStudentStore()
-
-const formModel = ref(createNewRecord())
-const dialog = shallowRef(false)
-const isEditing = toRef(() => !!formModel.value.student_id)
-const apiError = ref(false)
-const deleteError = ref(false)
-const errorMessage = ref('')
-const search = ref('')
-
-const headers = [
-  { title: 'Name', key: 'name', align: 'start' },
-  { title: 'Email', key: 'email' },
-  { title: 'Mobile', key: 'mobile' },
-  { title: 'Course', key: 'course' },
-  { title: 'GPA', key: 'gpa' },
-  { title: 'Actions', key: 'actions', align: 'end', sortable: false },
-]
-
-onMounted(() => {
-  reset()
-})
+async function loadItems({ page, itemsPerPage, sortBy, search }) {
+  
+  console.log('PARAMS', page, itemsPerPage)
+  const offset = (page - 1) * itemsPerPage
+  console.log('CALC', offset, itemsPerPage)
+  if (!search) {
+    await studentStore.getStudents(offset, itemsPerPage, sortBy)
+  } else {
+    console.log('search param', search)
+    await studentStore.searchStudents({ name: search }, offset, itemsPerPage)
+  }
+}
 
 const requiredRule = (value) => !!value || 'Field is required.'
 const emailRules = [
@@ -225,7 +237,7 @@ function edit(id) {
   deleteError.value = false
   errorMessage.value = ''
 
-  const found = studentStore.items.find((rep) => rep.student_id === id)
+  const found = studentStore.items.find((student) => student.student_id === id)
 
   formModel.value = {
     student_id: found.student_id,
@@ -239,8 +251,8 @@ function edit(id) {
   dialog.value = true
 }
 
-async function remove(repId) {
-  const response = await studentStore.deleteStudent(repId)
+async function remove(id) {
+  const response = await studentStore.deleteStudent(id)
   if (response?.status == 204) {
     console.log('delete success')
   } else if (response?.status == 401) {
@@ -303,12 +315,6 @@ async function save() {
       }
     }
   }
-}
-
-async function reset() {
-  dialog.value = false
-  formModel.value = createNewRecord()
-  await studentStore.getStudents()
 }
 
 function clearError() {

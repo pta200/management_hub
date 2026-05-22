@@ -5,22 +5,17 @@ import axios from 'axios'
 
 const API_URL = import.meta.env.VITE_API_ROOT_URL || ''
 
-export const useStudentStore = defineStore('students', () => {
+export const useNotificationStore = defineStore('notifications', () => {
   const items = ref([])
   const total = ref(0)
   const loading = ref(false)
   const userStore = useUserStore()
 
-  async function getStudents(offset = 0, limit = 100, sortBy) {
-    let rel_url = `/students/paginate?offset=${offset}&limit=${limit}`
-    if (sortBy?.length > 0) {
-      console.log("sort", JSON.stringify(sortBy))
-      rel_url = rel_url + `&${sortBy[0].key}=${sortBy[0].order}`
-    }
+  async function getNotifications(offset = 0, limit = 100) {
     loading.value = true
     try {
       const response = await axios.get(
-        API_URL + rel_url,
+        API_URL + `/notifications/paginate?offset=${offset}&limit=${limit}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -45,9 +40,9 @@ export const useStudentStore = defineStore('students', () => {
     }
   }
 
-  async function addStudent(payload) {
+  async function addNotification(payload) {
     try {
-      const response = await axios.post(API_URL + '/students', payload, {
+      const response = await axios.post(API_URL + '/notifications', payload, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${userStore.authToken}`,
@@ -65,16 +60,16 @@ export const useStudentStore = defineStore('students', () => {
     }
   }
 
-  async function editStudent(studentId, payload) {
+  async function editNotification(notificationId, payload) {
     try {
-      const response = await axios.put(API_URL + `/students/student/${studentId}`, payload, {
+      const response = await axios.put(API_URL + `/notifications/notification/${notificationId}`, payload, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${userStore.authToken}`,
         },
       })
       console.log('Response:', response)
-      const index = items.value.findIndex((book) => book.book_id === studentId)
+      const index = items.value.findIndex((book) => book.book_id === notificationId)
       items.value.splice(index, 1, response.data)
       return response
     } catch (error) {
@@ -86,16 +81,16 @@ export const useStudentStore = defineStore('students', () => {
     }
   }
 
-  async function deleteStudent(studentId) {
+  async function deleteNotification(notificationId) {
     try {
-      const response = await axios.delete(API_URL + `/students/${studentId}`, {
+      const response = await axios.delete(API_URL + `/notifications/${notificationId}`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${userStore.authToken}`,
         },
       })
       console.log('Response:', response)
-      const index = items.value.findIndex((book) => book.book_id === studentId)
+      const index = items.value.findIndex((book) => book.book_id === notificationId)
       items.value.splice(index, 1)
       return response
     } catch (error) {
@@ -107,12 +102,12 @@ export const useStudentStore = defineStore('students', () => {
     }
   }
 
-  async function searchStudents(payload, offset = 0, limit = 100) {
+  async function searchNotifications(payload, offset = 0, limit = 100) {
     try {
       const queryString = new URLSearchParams(payload).toString()
-      console.log(`/students/search?filter=${queryString}&offset=${offset}&limit=${limit}`)
+      console.log(`/notifications/search?filter=${queryString}&offset=${offset}&limit=${limit}`)
       const response = await axios.get(
-        API_URL + `/students/search?${queryString}&offset=${offset}&limit=${limit}`,
+        API_URL + `/notifications/search?${queryString}&offset=${offset}&limit=${limit}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -137,5 +132,5 @@ export const useStudentStore = defineStore('students', () => {
     }
   }
 
-  return { items, total, getStudents, addStudent, editStudent, deleteStudent, searchStudents }
+  return { items, total, getNotifications, addNotification, editNotification, deleteNotification, searchNotifications }
 })
